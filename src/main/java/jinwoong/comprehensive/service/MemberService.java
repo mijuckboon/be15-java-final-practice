@@ -40,39 +40,41 @@ public class MemberService {
     }
 
     public void modifyMemberInfo(Member updatedMember) {
-        Member existingMember = memberRepository.selectMemberByNo(updatedMember.getNo());
-        if (existingMember == null || isDeleted(existingMember)) {
-            throw new IllegalArgumentException("회원 정보 수정 실패: 해당 회원을 찾을 수 없습니다.");
-        }
+        checkExistence(updatedMember, "정보 수정");
         NameValidator.checkName(updatedMember);
         memberRepository.updateMemberInfo(updatedMember);
     }
 
+    public void checkExistence(Member member, String keyword) {
+        Member existingMember = memberRepository.selectMemberByNo(member.getNo());
+        if (existingMember == null || isDeleted(existingMember)) {
+            throw new IllegalArgumentException("회원 %s 실패: 해당 회원을 찾을 수 없습니다.".formatted(keyword));
+        }
+    }
+
+    public void checkStatusModifiability(Member member, Status status) {
+        String description = status.getDescription();
+        checkExistence(member, description);
+        if (member.getStatus().equals(status)) {
+            throw new IllegalArgumentException("회원 %s 실패: 이미 %s 상태인 회원입니다.".formatted(description, description));
+        }
+    }
+
     public void activateMember(int no) {
         Member existingMember = memberRepository.selectMemberByNo(no);
-        if (existingMember == null || isDeleted(existingMember)) {
-            throw new IllegalArgumentException("회원 활성화 실패: 해당 회원을 찾을 수 없습니다.");
-        } if (isActive(existingMember)) {
-            throw new IllegalArgumentException("회원 활성화 실패: 이미 활성화 상태인 회원입니다.");
-        }
+        checkStatusModifiability(existingMember, Status.IS_ACTIVE);
         memberRepository.activateMember(no);
     }
 
     public void inactivateMember(int no) {
         Member existingMember = memberRepository.selectMemberByNo(no);
-        if (existingMember == null || isDeleted(existingMember)) {
-            throw new IllegalArgumentException("회원 비활성화 실패: 해당 회원을 찾을 수 없습니다.");
-        } if (isInactive(existingMember)) {
-            throw new IllegalArgumentException("회원 비활성화 실패: 이미 비활성화 상태인 회원입니다.");
-        }
+        checkStatusModifiability(existingMember, Status.IS_INACTIVE);
         memberRepository.inactivateMember(no);
     }
 
     public void removeMember(int no) {
         Member existingMember = memberRepository.selectMemberByNo(no);
-        if (existingMember == null || isDeleted(existingMember)) {
-            throw new IllegalArgumentException("회원 탈퇴 실패: 해당 회원을 찾을 수 없습니다.");
-        }
+        checkStatusModifiability(existingMember, Status.IS_DELETED);
         memberRepository.deleteMember(no);
     }
 

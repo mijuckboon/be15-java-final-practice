@@ -6,12 +6,18 @@ import jinwoong.comprehensive.persistence.MemberRepository;
 import jinwoong.comprehensive.service.MemberService;
 
 public class StatusModifier {
-    InputManager inputManager = new InputManager();
-    MemberRepository memberRepository = new MemberRepository(new FileMemberStorage());
-    MemberService memberService = new MemberService(memberRepository);
+    private final InputManager inputManager = new InputManager();
+    private final MemberService memberService;
+
+    public StatusModifier(MemberService memberService) {
+        this.memberService = memberService;
+    }
 
     void modifyMemberStatus() {
-        String message = "===== %s ===== ".formatted(Feature.MODIFY_MEMBER_STATUS.toString()) + System.lineSeparator() + inputManager.showElements(Status.values());
+        String message = "===== %s =====%n%s ".formatted(
+                Feature.MODIFY_MEMBER_STATUS.toString()
+                , inputManager.showElements(Status.values())
+        );
         String inputMessage = "메뉴 선택 (번호 입력): ";
         int choice = inputManager.getInputByInt(message, inputMessage);
         Status status = Status.fromInt(choice);
@@ -51,7 +57,7 @@ public class StatusModifier {
     }
 
     void removeMember() {
-       modifyStatusAs(Status.IS_DELETED);
+        modifyStatusAs(Status.IS_DELETED);
     }
 
 }
