@@ -1,8 +1,6 @@
 package jinwoong.comprehensive.ui;
 
 import jinwoong.comprehensive.domain.Status;
-import jinwoong.comprehensive.persistence.FileMemberStorage;
-import jinwoong.comprehensive.persistence.MemberRepository;
 import jinwoong.comprehensive.service.MemberService;
 
 public class StatusModifier {
@@ -32,18 +30,17 @@ public class StatusModifier {
 
     void modifyStatusAs(Status status) {
         String description = status.getDescription();
-        String message = "";
         try {
             String inputMessage = "%s할 회원 번호 입력: ".formatted(description);
-            int no = inputManager.getInputByInt(message, inputMessage);
+            int no = inputManager.getInputByInt(inputMessage);
 
-            switch (status) {
+            switch (status) { // NullPointerException으로 인해 Enum 정보 노출되는 부분 수정 필요
                 case IS_ACTIVE -> memberService.activateMember(no);
                 case IS_INACTIVE -> memberService.inactivateMember(no);
                 case IS_DELETED -> memberService.removeMember(no);
             }
         } catch (IllegalArgumentException e) {
-            message = e.getMessage();
+            String message = e.getMessage();
             System.out.println(message);
         }
     }

@@ -1,13 +1,8 @@
 package jinwoong.comprehensive.ui;
 
-import jinwoong.comprehensive.domain.Role;
-import jinwoong.comprehensive.domain.Status;
-import jinwoong.comprehensive.domain.Member;
 import jinwoong.comprehensive.persistence.FileMemberStorage;
 import jinwoong.comprehensive.persistence.MemberRepository;
 import jinwoong.comprehensive.service.MemberService;
-
-import java.util.List;
 
 public class Application {
     private final MemberService memberService;
