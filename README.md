@@ -24,5 +24,8 @@
 7. 기타 개선 사항
 
 ## 4. TODO
-1. Enum 클래스의 no 속성에 중복값 없도록 검증 로직 추가
-2. `NullPointerException`으로 enum 클래스 관련 예외 메시지 뜨는 부분 `IllegalArgumentException`으로 수정하기
+1. fix
+   * Enum 클래스의 no 속성에 중복값 없도록 검증 로직 추가 
+   * `NullPointerException`으로 enum 클래스 관련 예외 메시지 뜨는 부분 `IllegalArgumentException`으로 수정하기
+2. refactor
+   * 메서드 분리 등 추가 리팩토링
